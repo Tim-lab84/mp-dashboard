@@ -8,9 +8,9 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useSidebar } from "../SidebarContext"; // Import Sidebar context
 
 const SIDEBAR_ITEMS = [
   { name: "Overview", icon: BarChart2, color: "#6366f1", href: "/" },
@@ -23,20 +23,20 @@ const SIDEBAR_ITEMS = [
 ];
 
 const Sidebar = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { isOpen, toggleSidebar } = useSidebar(); // Use global sidebar state
 
   return (
     <motion.div
       className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${
-        isSidebarOpen ? "w-64" : "w-20"
+        isOpen ? "w-64" : "w-20"
       }`}
-      animate={{ width: isSidebarOpen ? "256px" : "80px" }}
+      animate={{ width: isOpen ? "256px" : "80px" }}
     >
       <div className="h-full bg-gray-800 backdrop-blur-md p-4 flex flex-col border-r border-gray-700">
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onClick={toggleSidebar} // Use context function instead of local state
           className="p-2 rounded-full hover:bg-gray-700 transition-colors max-w-fit"
         >
           <Menu size={24} />
@@ -52,7 +52,7 @@ const Sidebar = () => {
                 />
 
                 <AnimatePresence>
-                  {isSidebarOpen && (
+                  {isOpen && (
                     <motion.span
                       className="ml-4 whitespace-nowrap"
                       initial={{ opacity: 0, width: 0 }}
